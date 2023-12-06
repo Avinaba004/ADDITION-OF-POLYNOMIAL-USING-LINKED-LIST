@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int coff;
+    int expo;
+    struct node *next;
+};
+
+struct node *insert(struct node *head, int coff, int expo)
+{
+    struct node *newnode = (struct node *)malloc(sizeof(struct node));
+    struct node *temp;
+
+    newnode->coff = coff;
+    newnode->expo = expo;
+    newnode->next = NULL;
+
+    if (head == NULL || expo > head->expo)
+    {
+        newnode->next = head;
+        head = newnode;
+    }
+    else
+    {
+        temp = head;
+        while (temp->next != NULL && temp->next->expo >= expo)
+        {
+            temp = temp->next;
+        }
+        newnode->next = temp->next;
+        temp->next = newnode;
+    }
+    return head;
+}
+
+struct node *create(struct node *head)
+{
+    int i, no, coff, expo;
+    printf("\nEnter the number of terms you want to enter: ");
+    scanf("%d", &no);
+    for (i = 1; i <= no; i++)
+    {
+        printf("\nEnter the coefficient of the term %d:", i);
+        scanf("%d", &coff);
+        printf("\nEnter the exponent of the term %d:", i);
+        scanf("%d", &expo);
+
+        head = insert(head, coff, expo);
+    }
+    return head;
+}
+
+void print(struct node *head)
+{
+    struct node *temp = head;
+
+    if (head == NULL)
+    {
+        printf("\nNO POLYNOMIAL FORMED :)");
+    }
+    else
+    {
+        while (temp != NULL)
+        {
+            printf("%dx^%d", temp->coff, temp->expo);
+            if (temp->next != NULL)
+                printf("+");
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+}
+
+void add(struct node *head1, struct node *head2)
+{
+    struct node *ptr1 = head1;
+    struct node *ptr2 = head2;
+    struct node *head3 = NULL;
+
+    while (ptr1 != NULL && ptr2 != NULL)
+    {
+        if (ptr1->expo == ptr2->expo)
+        {
+            head3 = insert(head3, ptr1->coff + ptr2->coff, ptr1->expo);
+            ptr1 = ptr1->next;
+            ptr2 = ptr2->next;
+        }
+        else if (ptr1->expo > ptr2->expo)
+        {
+            head3 = insert(head3, ptr1->coff, ptr1->expo);
+            ptr1 = ptr1->next;
+        }
+        else
+        {
+            head3 = insert(head3, ptr2->coff, ptr2->expo);
+            ptr2 = ptr2->next;
+        }
+    }
+
+    while (ptr1 != NULL)
+    {
+        head3 = insert(head3, ptr1->coff, ptr1->expo);
+        ptr1 = ptr1->next;
+    }
+
+    while (ptr2 != NULL)
+    {
+        head3 = insert(head3, ptr2->coff, ptr2->expo);
+        ptr2 = ptr2->next;
+    }
+
+    printf("\n AFTER SUMMATION THE POLYNOMIAL IS:");
+    print(head3);
+}
+
+int main()
+{
+    struct node *head1 = NULL;
+    struct node *head2 = NULL;
+    printf("\nEnter the first polynomial-");
+    head1 = create(head1);
+    printf("\nEnter the second polynomial-");
+    head2 = create(head2);
+
+    add(head1, head2);
+
+    return 0;
+}
