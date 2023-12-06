@@ -1,0 +1,39 @@
+  #include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+	int item;
+	struct node* next;
+};
+
+struct node *head,*temp,*newnode;
+int main()
+{
+	int i,n,count,k;
+	printf("Enter the number of elements in the linked list");
+	scanf("%d",&n);
+	printf("Enter the position yow want to element");
+	scanf("%d",&k);
+	head=(struct node*)malloc(sizeof(struct node));
+	head->item=1;
+	temp=head;
+	for(i=2;i<=n;i++)
+	{
+	   newnode=(struct node*)malloc(sizeof(struct node));
+	   newnode->item=i;
+	   newnode->next=head;
+	   temp->next=newnode;
+	   temp=newnode;
+    }
+	   for(count=n;count>1;count--)
+	   {
+	   	for(i=1;i<k-1;++i)
+	   	{
+	   		temp=temp->next;
+		   }
+		printf("\n%d deleted",temp->next->item);
+		temp->next=temp->next->next;
+	   }
+	   printf("The winner is %d",temp->item);
+	
+}
